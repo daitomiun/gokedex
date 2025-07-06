@@ -1,16 +1,30 @@
 package main
 
-func getAllCommands() map[string]cliCommand {
-	return map[string]cliCommand{
+import (
+	. "github.com/daitomiun/gokedex/models"
+)
+
+func getAllCommands() map[string]CliCommand {
+	return map[string]CliCommand{
 		"exit": {
-			name:        "exit",
-			description: "Exit the Pokedex",
-			callback:    commandExit,
+			Name:        "exit",
+			Description: "Exit the Pokedex",
+			Callback:    commandExit,
 		},
 		"help": {
-			name:        "help",
-			description: "Displays a help message",
-			callback:    commandHelp,
+			Name:        "help",
+			Description: "Displays a help message",
+			Callback:    commandHelp,
+		},
+		"map": {
+			Name:        "map",
+			Description: "Shows next pokemon 20 locations",
+			Callback:    commandMap,
+		},
+		"mapb": {
+			Name:        "mapb",
+			Description: "Shows previous pokemon 20 locations",
+			Callback:    commandMapb,
 		},
 	}
 }
