@@ -21,7 +21,6 @@ func startREPL() {
 		Next: &startUrl,
 		Prev: nil,
 	}
-	fmt.Println(*config.Next)
 	for true {
 		fmt.Print("Pokedex > ")
 		reader.Scan()

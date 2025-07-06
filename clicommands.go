@@ -26,23 +26,29 @@ func commandHelp(config *Config) error {
 }
 
 func commandMap(config *Config) error {
+	if config.Next == nil {
+		fmt.Println("End of next locations try to go back")
+		return nil
+	}
 	newConfig, locations := service.GetMapLocations(*config.Next)
-	//logic here to output the values
-	fmt.Printf("config: %v locations: %v \n", newConfig, locations)
-	fmt.Printf("config: %v locations: %v \n", newConfig.Next, locations)
-
-	//logic here to update the config parameters after a new call
+	*config = newConfig
+	for _, location := range locations {
+		fmt.Println(location)
+	}
 
 	return nil
-
 }
 
 func commandMapb(config *Config) error {
+	if config.Prev == nil {
+		fmt.Println("End of Prev locations try to go next")
+		return nil
+	}
 	newConfig, locations := service.GetMapLocations(*config.Prev)
-	//logic here to output the values
+	*config = newConfig
+	for _, location := range locations {
+		fmt.Println(location)
+	}
 
-	fmt.Printf("config: %v locations: %v \n", newConfig, locations)
-	//logic here to update the config parameters after a new call
-	// use the "next" and "prev" specs from the pokeAPI to show information about the maps
 	return nil
 }

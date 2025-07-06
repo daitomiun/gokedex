@@ -18,12 +18,12 @@ func getAllCommands() map[string]CliCommand {
 		},
 		"map": {
 			Name:        "map",
-			Description: "Shows next pokemon 20 locations",
+			Description: "Get the next page of locations",
 			Callback:    commandMap,
 		},
 		"mapb": {
 			Name:        "mapb",
-			Description: "Shows previous pokemon 20 locations",
+			Description: "Get the previous page of locations",
 			Callback:    commandMapb,
 		},
 	}
