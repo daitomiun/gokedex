@@ -8,8 +8,6 @@ import (
 )
 
 func GetMapLocations(url string) (Config, []string) {
-	// return a list of maps from the url
-	// convert the json into a valid go struct
 	res, err := http.Get(url)
 	if err != nil {
 		log.Fatal(err)
