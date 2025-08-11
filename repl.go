@@ -3,9 +3,11 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"github.com/daitomiun/gokedex/internal/pokecache"
 	. "github.com/daitomiun/gokedex/models"
 	"os"
 	"strings"
+	"time"
 )
 
 func cleanInput(text string) []string {
@@ -16,11 +18,9 @@ func cleanInput(text string) []string {
 
 func startREPL() {
 	reader := bufio.NewScanner(os.Stdin)
-	startUrl := "https://pokeapi.co/api/v2/location-area/?offset=0&limit=20"
-	config := Config{
-		Next: &startUrl,
-		Prev: nil,
-	}
+	cache := pokecache.NewCache(time.Duration(20 * time.Second))
+	config := createConfig(20, 20)
+
 	for true {
 		fmt.Print("Pokedex > ")
 		reader.Scan()
@@ -30,7 +30,7 @@ func startREPL() {
 		}
 		cmd, exists := getAllCommands()[input[0]]
 		if exists {
-			err := cmd.Callback(&config)
+			err := cmd.Callback(&config, cache)
 			if err != nil {
 				fmt.Println(err)
 			}
@@ -40,4 +40,17 @@ func startREPL() {
 			continue
 		}
 	}
+}
+
+func createConfig(currentOffset, limit int32) Config {
+	config := Config{
+		Next:          currentOffset + limit,
+		Prev:          currentOffset - limit,
+		CurrentOffset: currentOffset,
+		Limit:         limit,
+	}
+	if config.Prev < 0 {
+		config.Prev = 0
+	}
+	return config
 }

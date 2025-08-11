@@ -2,18 +2,19 @@ package main
 
 import (
 	"fmt"
+	"github.com/daitomiun/gokedex/internal/pokecache"
 	"github.com/daitomiun/gokedex/internal/service"
 	. "github.com/daitomiun/gokedex/models"
 	"os"
 )
 
-func commandExit(config *Config) error {
+func commandExit(config *Config, cache *pokecache.Cache) error {
 	fmt.Println("Closing the Pokedex... Goodbye!")
 	os.Exit(0)
 	return nil
 }
 
-func commandHelp(config *Config) error {
+func commandHelp(config *Config, cache *pokecache.Cache) error {
 	fmt.Println()
 	fmt.Println("Welcome to the Pokedex!")
 	fmt.Println("Usage: ")
@@ -25,30 +26,41 @@ func commandHelp(config *Config) error {
 	return nil
 }
 
-func commandMap(config *Config) error {
-	if config.Next == nil {
+func commandMap(config *Config, cache *pokecache.Cache) error {
+	locations := service.GetMapLocations(config.CurrentOffset, cache)
+	if len(locations) == 0 {
 		fmt.Println("End of next locations try to go back")
 		return nil
 	}
-	newConfig, locations := service.GetMapLocations(*config.Next)
-	*config = newConfig
 	for _, location := range locations {
 		fmt.Println(location)
 	}
-
+	config.CurrentOffset += config.Limit
+	config.Next = config.CurrentOffset + config.Limit
+	config.Prev = config.CurrentOffset - config.Limit
+	if config.Prev < 0 {
+		config.Prev = 0
+	}
 	return nil
 }
 
-func commandMapb(config *Config) error {
-	if config.Prev == nil {
-		fmt.Println("End of Prev locations try to go next")
+func commandMapb(config *Config, cache *pokecache.Cache) error {
+	if config.CurrentOffset == 0 {
+		fmt.Println("You're on the first page")
 		return nil
 	}
-	newConfig, locations := service.GetMapLocations(*config.Prev)
-	*config = newConfig
+	config.CurrentOffset -= config.Limit
+	if config.CurrentOffset < 0 {
+		config.CurrentOffset = 0
+	}
+	locations := service.GetMapLocations(config.CurrentOffset, cache)
 	for _, location := range locations {
 		fmt.Println(location)
 	}
-
+	config.Next = config.CurrentOffset + config.Limit
+	config.Prev = config.CurrentOffset - config.Limit
+	if config.Prev < 0 {
+		config.Prev = 0
+	}
 	return nil
 }
