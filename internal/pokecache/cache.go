@@ -55,8 +55,6 @@ func (c *Cache) reapLoop() {
 			now := time.Now()
 			c.mu.Lock()
 			for key, entry := range c.entries {
-				//				fmt.Println(key)
-				//				fmt.Printf("entry time: %v, now: %v \n", entry.createdAt, now.Add(-c.interval))
 				if entry.createdAt.Before(now.Add(-c.interval)) {
 					delete(c.entries, key)
 				}
