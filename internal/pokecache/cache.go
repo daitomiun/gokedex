@@ -51,7 +51,7 @@ func (c *Cache) reapLoop() {
 	ticker := time.NewTicker(c.interval)
 	go func() {
 		for t := range ticker.C {
-			fmt.Println("Tick at", t)
+			fmt.Println("\n Tick at", t)
 			now := time.Now()
 			c.mu.Lock()
 			for key, entry := range c.entries {

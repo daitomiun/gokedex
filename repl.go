@@ -30,7 +30,7 @@ func startREPL() {
 		}
 		cmd, exists := getAllCommands()[input[0]]
 		if exists {
-			err := cmd.Callback(&config, cache)
+			err := cmd.Callback(&config, cache, setParam(input))
 			if err != nil {
 				fmt.Println(err)
 			}
@@ -39,6 +39,14 @@ func startREPL() {
 			fmt.Println("Unknown command")
 			continue
 		}
+	}
+}
+
+func setParam(input []string) string {
+	if len(input) > 1 {
+		return input[1]
+	} else {
+		return ""
 	}
 }
 

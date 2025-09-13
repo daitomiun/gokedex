@@ -8,13 +8,13 @@ import (
 	"os"
 )
 
-func commandExit(config *Config, cache *pokecache.Cache) error {
+func commandExit(config *Config, cache *pokecache.Cache, param string) error {
 	fmt.Println("Closing the Pokedex... Goodbye!")
 	os.Exit(0)
 	return nil
 }
 
-func commandHelp(config *Config, cache *pokecache.Cache) error {
+func commandHelp(config *Config, cache *pokecache.Cache, param string) error {
 	fmt.Println()
 	fmt.Println("Welcome to the Pokedex!")
 	fmt.Println("Usage: ")
@@ -26,7 +26,7 @@ func commandHelp(config *Config, cache *pokecache.Cache) error {
 	return nil
 }
 
-func commandMap(config *Config, cache *pokecache.Cache) error {
+func commandMap(config *Config, cache *pokecache.Cache, param string) error {
 	locations := service.GetMapLocations(config.CurrentOffset, cache)
 	if len(locations) == 0 {
 		fmt.Println("End of next locations try to go back")
@@ -44,7 +44,7 @@ func commandMap(config *Config, cache *pokecache.Cache) error {
 	return nil
 }
 
-func commandMapb(config *Config, cache *pokecache.Cache) error {
+func commandMapb(config *Config, cache *pokecache.Cache, param string) error {
 	if config.CurrentOffset == 0 {
 		fmt.Println("You're on the first page")
 		return nil
@@ -54,6 +54,10 @@ func commandMapb(config *Config, cache *pokecache.Cache) error {
 		config.CurrentOffset = 0
 	}
 	locations := service.GetMapLocations(config.CurrentOffset, cache)
+	if len(locations) == 0 || locations == nil {
+		fmt.Println("No locations found")
+		return nil
+	}
 	for _, location := range locations {
 		fmt.Println(location)
 	}
@@ -61,6 +65,20 @@ func commandMapb(config *Config, cache *pokecache.Cache) error {
 	config.Prev = config.CurrentOffset - config.Limit
 	if config.Prev < 0 {
 		config.Prev = 0
+	}
+	return nil
+}
+
+func commandExplore(config *Config, cache *pokecache.Cache, location string) error {
+	pokemons := service.GetPokemonsFromLocation(location, cache)
+	fmt.Printf("Exploring %s \n", location)
+	if len(pokemons) == 0 || pokemons == nil {
+		fmt.Printf("No pokemon on %s ", location)
+		return nil
+	}
+	fmt.Println("Found Pokemon:")
+	for _, pokemon := range pokemons {
+		fmt.Printf("- %s \n", pokemon)
 	}
 	return nil
 }
