@@ -5,4 +5,5 @@ type Config struct {
 	Prev          int32
 	CurrentOffset int32
 	Limit         int32
+	Pokedex       map[string]Pokemon
 }

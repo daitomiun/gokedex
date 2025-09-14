@@ -12,6 +12,27 @@ import (
 	. "github.com/daitomiun/gokedex/models"
 )
 
+func GetPokemon(pokemon string) Pokemon {
+	url := fmt.Sprintf("https://pokeapi.co/api/v2/pokemon/%s", pokemon)
+	fmt.Printf("INFO: %s \n", url)
+	res, err := http.Get(url)
+	if res.StatusCode == 404 {
+		return Pokemon{}
+	}
+	body, err := io.ReadAll(res.Body)
+	if err != nil {
+		return Pokemon{}
+	}
+
+	bytesReader := bytes.NewReader(body)
+	var newPokemon Pokemon
+	decoder := json.NewDecoder(io.NopCloser(bytesReader))
+	if err := decoder.Decode(&newPokemon); err != nil {
+		log.Fatal(err)
+	}
+	return newPokemon
+}
+
 func GetPokemonsFromLocation(location string, cache *pokecache.Cache) []string {
 	url := setLocationUrl(location)
 	println(url)

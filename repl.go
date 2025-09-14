@@ -56,6 +56,7 @@ func createConfig(currentOffset, limit int32) Config {
 		Prev:          currentOffset - limit,
 		CurrentOffset: currentOffset,
 		Limit:         limit,
+		Pokedex:       map[string]Pokemon{},
 	}
 	if config.Prev < 0 {
 		config.Prev = 0

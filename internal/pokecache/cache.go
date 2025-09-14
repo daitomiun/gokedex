@@ -60,7 +60,6 @@ func (c *Cache) reapLoop() {
 				}
 			}
 			c.mu.Unlock()
-
 		}
 	}()
 }
